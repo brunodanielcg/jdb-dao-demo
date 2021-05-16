@@ -24,7 +24,6 @@ public class SellerDaoJDBC implements SellerDao {
 		this.conn = conn;
 	}
 	
-	
 	@Override
 	public void insert(Seller obj) {
 		PreparedStatement st = null;
@@ -88,9 +87,27 @@ public class SellerDaoJDBC implements SellerDao {
 	}
 
 	@Override
-	public void deleteById(Seller id) {
-		// TODO Auto-generated method stub
-		
+	public void deleteById(Integer id) {
+		PreparedStatement st = null;
+		try { 
+			st = conn.prepareStatement("DELETE FROM seller WHERE Id = ?");
+			
+			st.setInt(1, id);
+			
+			st.executeUpdate();	
+			
+			int rowsAffected = st.executeUpdate();
+			
+			if (rowsAffected == 0) {
+				throw new DbException ("No rows affected! Invalid id");
+			}
+		}
+		catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeStatement(st);
+		}
 	}
 
 	@Override
